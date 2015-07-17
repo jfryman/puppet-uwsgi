@@ -18,6 +18,7 @@ class uwsgi::params {
     $tyrant              = true
     $install_pip         = true
     $install_python_dev  = true
+    $install_package     = true
     $log_file            = '/var/log/uwsgi/uwsgi-emperor.log'
     $log_rotate          = 'no'
     $python_pip          = 'python-pip'
