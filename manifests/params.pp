@@ -31,7 +31,7 @@ class uwsgi::params {
             $socket        = '/var/run/uwsgi/uwsgi.socket'
         }
         default: {
-            $app_directory = '/etc/uwsgi/apps-enabled'
+            $app_directory = '/etc/uwsgi.d'
             $pidfile       = '/run/uwsgi/uwsgi.pid'
             $python_dev    = 'python-dev'
             $socket        = '/run/uwsgi/uwsgi.socket'
