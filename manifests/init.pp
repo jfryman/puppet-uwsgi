@@ -73,6 +73,10 @@
 #    Install python header files if not already installed?
 #    Default: true
 #
+# [*install_package*]
+#    Install uwsgi package via this module
+#    Default: true
+#
 # [*python_pip*]
 #    Package to be installed for pip
 #    Default: 'python-pip'
@@ -107,6 +111,7 @@ class uwsgi (
     $tyrant              = $uwsgi::params::tyrant,
     $install_pip         = $uwsgi::params::install_pip,
     $install_python_dev  = $uwsgi::params::install_python_dev,
+    $install_package     = $uwsgi::params::install_package,
     $python_pip          = $uwsgi::params::python_pip,
     $python_dev          = $uwsgi::params::python_dev,
     $pidfile             = $uwsgi::params::pidfile,
@@ -130,9 +135,11 @@ class uwsgi (
         }
     }
 
-    package { $package_name:
-        ensure   => $package_ensure,
-        provider => $package_provider
+    if $install_package {
+        package { $package_name:
+            ensure   => $package_ensure,
+            provider => $package_provider
+        }
     }
 
     # remove config files if package is purged
