@@ -138,7 +138,13 @@ class uwsgi (
     if $install_package {
         package { $package_name:
             ensure   => $package_ensure,
-            provider => $package_provider
+            provider => $package_provider,
+            before   => [
+              File[$config_file],
+              File[$service_file_real],
+              File[$app_directory],
+              Service[$service_name],
+            ],
         }
     }
 
@@ -155,7 +161,6 @@ class uwsgi (
         group   => 'root',
         mode    => '0644',
         content => template('uwsgi/uwsgi.ini.erb'),
-        require => Package[$package_name]
     }
 
     if $manage_service_file == true {
@@ -196,7 +201,6 @@ class uwsgi (
           mode     => $service_file_mode_real,
           replace  => $manage_service_file,
           content  => template($service_template_real),
-          require  => Package[$package_name]
       }
       $required_files = [ $config_file, $service_file_real ]
     } else {
@@ -208,7 +212,6 @@ class uwsgi (
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        require => Package[$package_name]
     }
 
     service { $service_name:
@@ -217,11 +220,7 @@ class uwsgi (
         hasrestart => true,
         hasstatus  => true,
         provider   => $service_provider,
-        require    => [
-            Package[$package_name],
-            File[$required_files]
-            ],
-        subscribe  => File[$required_files]
+        subscribe  => File[$required_files],
     }
 
     case $log_rotate {
